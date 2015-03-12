@@ -9,6 +9,63 @@
     <visible>[VideoPlayer.IsFullscreen] + [Window.IsVisible(videoosd) | Window.IsVisible(fullscreeninfo) | Player.Seeking | Player.DisplayAfterSeek | Player.Paused | Player.Forwarding | Player.Rewinding | Player.ShowInfo | !IsEmpty(Window(home).Property(osdshowinfo))]</visible>
     <zorder>0</zorder>
     <controls>
+    <!-- Porgress Ring -->
+        <control type="group">
+            <include>Animation.FadeIn</include>
+            <include>Animation.FadeOut</include>
+			<control type="image">
+                <centerleft>50%</centerleft>
+                <centertop>50%</centertop>
+                <width>100</width>
+                <height>100</height>
+                <texture>osd/circle.png</texture>
+                <aspectratio align="center">keep</aspectratio>
+            </control>
+            <control type="image" description="Back">
+                <centerleft>50%</centerleft>
+                <centertop>50%</centertop>
+                <width>150</width>
+                <height>150</height>
+                <aspectratio align="center" aligny="center">keep</aspectratio>
+                <texture>progress/back.png</texture>
+            </control>
+            <control type="image" description="Play">
+                <centerleft>50%</centerleft>
+                <centertop>50%</centertop>
+                <width>150</width>
+                <height>150</height>
+                <aspectratio align="center" aligny="center">keep</aspectratio>
+                <texture colordiffuse="PanelWhite100">progress/play.png</texture>
+                <visible>!Player.Paused</visible>
+            </control>
+            <control type="image" description="Pause">
+                <centerleft>50%</centerleft>
+                <centertop>50%</centertop>
+                <width>150</width>
+                <height>150</height>
+                <aspectratio align="center" aligny="center">keep</aspectratio>
+                <texture colordiffuse="PanelWhite100">progress/pause.png</texture>
+                <visible>Player.Paused</visible>
+            </control>
+            <control type="progress" id="933">
+                <texturebg>-</texturebg>
+                <lefttexture>-</lefttexture>
+                <midtexture>-</midtexture>
+                <righttexture>-</righttexture>
+                <info>Player.Progress</info>
+                <visible>false</visible>
+            </control>
+            <control type="image">
+                <centerleft>50%</centerleft>
+                <centertop>50%</centertop>
+                <width>150</width>
+                <height>150</height>
+                <texture>$INFO[Control.GetLabel(933),progress/circle/p,.png]</texture>
+                <visible>!IsEmpty(Player.Duration)</visible>
+                <aspectratio align="center">keep</aspectratio>
+            </control>
+        </control>
+        <!-- End Progress Ring -->
         <control type="group">
             <animation effect="slide" start="0" end="0,-74" time="150" condition="Window.IsVisible(videoosd)">Conditional</animation>
             <control type="group">
@@ -158,12 +215,60 @@
                         <info>Player.Progress</info>
                         <visible>true</visible>
                     </control>
+                    <!-- Clock-->
+                         <control type="group">
+                             <!-- hier kannst du die abstände mit right & bottom definieren -->
+                            <bottom>10</bottom>
+                            <right>0</right>
+                             <!-- hier kannst du die abstände mit right & bottom definieren -->
+                            <height>84</height>
+                            <animation effect="slide" start="0" end="0,-10" time="150" condition="Skin.HasSetting(furniture.weather)">Conditional</animation>
+                            <control type="label">
+                                <centertop>24</centertop>
+                                <right>50</right>
+                                <align>right</align>
+                                <font>LargeBold</font>
+                                <textcolor>$VAR[OSDPanelWhite70]</textcolor>
+                                <label>$INFO[System.Time(hh:mm)]</label>
+                                <animation effect="slide" start="0" end="50" time="0" condition="IsEmpty(System.Time(xx))">Conditional</animation>
+                            </control>
+                            <control type="label">
+                                <centertop>30</centertop>
+                                <font>SmallBold</font>
+                                <textcolor>$VAR[OSDPanelWhite70]</textcolor>
+                                <align>right</align>
+                                <right>0</right>
+                                <width>120</width>
+                                <label>$INFO[System.Time(xx)]</label>
+                                <visible>!IsEmpty(System.Time(xx))</visible>
+                            </control>  
+                            <control type="label">
+                                <centertop>64</centertop>
+                                <font>Flag</font>
+                                <right>0</right>
+                                <textcolor>$VAR[OSDPanelWhite70]</textcolor>
+                                <align>right</align>
+                                <width>50%</width>
+                                <label>$INFO[System.Date(DDD)]$COMMA $INFO[System.Date(d MMM yyyy)]</label>
+                            </control>
+                            <control type="label">
+                                <centertop>92</centertop>
+                                <font>Flag</font>
+                                <right>0</right>
+                                <textcolor>$VAR[OSDPanelWhite70]</textcolor>
+                                <align>right</align>
+                                <width>50%</width>
+                                <visible>Skin.HasSetting(furniture.weather)</visible>
+                                <label>$INFO[Weather.Temperature,[COLOR=Highlight],[/COLOR]  ]$INFO[Weather.Conditions]</label>
+                            </control>
+                        </control>
+                        <!-- End Clock -->
                 </control>
             </control>
         
         </control>
         <!-- Clock -->
-        <include>Furniture_OSDClock</include>
+        <!-- <include>Furniture_OSDClock</include> -->
     </controls>
 
 </window>
